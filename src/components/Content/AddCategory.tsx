@@ -13,7 +13,6 @@ interface Props {
 function AddCategory({handleTabChange, setSelectedCategoryId}: Props) {
   const [title, setTitle] = useState("")
   const [categories, setCategories] = useState<Category[]>([])
-  const [isEdit, setIsEdit] = useState(false)
 
   const fetchCategories = async () => {
       const { data } = await categoryList()

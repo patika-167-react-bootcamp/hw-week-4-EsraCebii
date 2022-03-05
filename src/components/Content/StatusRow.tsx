@@ -1,8 +1,7 @@
 import { Box, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { update, deleteCategory } from "../../controllers/Category";
+import React, { useEffect, useState } from "react";
+import { updateStatus } from "../../controllers/Status";
 import { deleteStatus } from "../../controllers/Status";
-import { Category } from "../../types/categoy";
 import { Status } from "../../types/status";
 
 type Props = {
@@ -13,18 +12,19 @@ type Props = {
 function StatusRow({ status, setStatus }: Props) {
   const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState(status.title);
+  const [color, setColor] = useState(status.color);
 
-  const {id}= status
-
-  // const handleEditClick = async () => {
-  //     if(isEdit){
-  //       await update({
-  //         title,
-  //         category,
-  //       })
-  //     }
-  //     setIsEdit((ex) => !ex)
-  // }
+  const {id, categoryId}= status
+  
+  const handleEditClick = async () => {
+      if(isEdit){
+        await updateStatus({
+          title,
+          id
+        })
+      }
+      setIsEdit((ex) => !ex)
+  }
 
   const handleDelete =  async () => {
       await deleteStatus(id)
@@ -35,7 +35,8 @@ function StatusRow({ status, setStatus }: Props) {
   return (
     <Box>
       <TextField value={title} onChange={(e) => setTitle(e.target.value)} disabled={!isEdit} />
-      {/* <button onClick={handleEditClick}>{isEdit ? "Save" : "Edit"}</button> */}
+      {/* <TextField value={color} onChange={(e) => setColor(e.target.value)} disabled={!isEdit} /> */}
+      <button onClick={handleEditClick}>{isEdit ? "Save" : "Edit"}</button>
       <button onClick={handleDelete}>Delete</button>
     </Box>
   );

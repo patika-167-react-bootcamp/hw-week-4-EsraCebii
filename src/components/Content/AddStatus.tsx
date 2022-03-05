@@ -12,7 +12,6 @@ interface Props {
 
 function AddStatus({selectedCategoryId}: Props) {
     const[status, setStatus] = useState<Status[]>([])
-    const [error, setError] = useState<string>();
 
     const fetchStatus = async () => {
         const { data } = await statusList({

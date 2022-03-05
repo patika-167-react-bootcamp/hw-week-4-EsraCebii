@@ -12,3 +12,6 @@ export const create = (payload: CreateCategoryRequest ) =>
   });
 
   export const deleteCategory = (id: number) => api.delete(`category/${id}`);
+
+  export const getCategoryById = (id: number) =>
+  api.get<CreateCategoryRequest>(`category/${id}`)

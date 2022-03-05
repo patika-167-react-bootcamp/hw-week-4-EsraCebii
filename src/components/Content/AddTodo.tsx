@@ -1,69 +1,117 @@
-import { Box, Button, TextField } from '@mui/material'
-import React, { useState } from 'react'
-import InputLabel from '@mui/material/InputLabel';
-import { useFormik } from "formik";
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { create } from "../../controllers/Todo"
-import { categoryList } from '../../controllers/Category';
-import { Category } from '../../types/categoy';
-import { statusList } from '../../controllers/Status';
+import { Box, Button, Grid, TextField } from "@mui/material";
+import  { useEffect, useState } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { categoryList } from "../../controllers/Category";
+import { Category } from "../../types/categoy";
+import { statusList } from "../../controllers/Status";
+import { create } from "../../controllers/Todo";
+import { Todo } from "../../types/todo"
+
 
 function AddTodo() {
-  const [title, setTitle] = useState("")
-  const [categoryId, setCategoryId] = useState<number>()
-  const [statusId, setStatusId] = useState<number>()
-  const [categories, setCategories] = useState<Category[]>([])
-  const [status, setStatus] = React.useState('')
+  const [title, setTitle] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [status, setStatus] = useState<any>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<any>();
+  const [selectedStatusId, setSelectedStatusId] = useState<any>();
+  const [todos, setTodos] = useState<any>()
+
   const fetchCategories = async () => {
-    const { data } = await categoryList()
-    setCategories(data)
-}
-// const fetchStatus= async () => {
-//   const { data } = await statusList({
-//     categoryId: 
-//   })
-//   setStatus(data)
-// }
+    const { data } = await categoryList();
+    setCategories(data);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    fetchStatus();
+  }, [selectedCategoryId]);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectedCategoryId(event.target.value);
+    console.log(selectedCategoryId, "selectedCategoryId");
+  };
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    setSelectedStatusId(event.target.value);
+    console.log(selectedStatusId, "selectedStatusId");
+  };
+  const fetchStatus = async () => {
+    const { data } = await statusList({
+      categoryId: selectedCategoryId as number,
+    });
+    setStatus(data);
+    console.log(status, "status");
+  };
+  const createTodo = async () => {
+    const { data } = await create({
+      categoryId: selectedCategoryId,
+      statusId: selectedStatusId,
+      title
+    });
+    setTodos(data);
+    console.log(todos, "todos");
+    
+
+  };
+
   return (
     <Box>
-       <TextField
-           id="title"
-           fullWidth
-           label="Title"
-           name="title"
-           variant="outlined"
-           sx={{ marginY: 1 }}
-           value={title}
-           type="text"
-           onChange={(e) => setTitle(e.target.value)}
-        />
-        <InputLabel >Category</InputLabel>
-        <Select
-          id="categoryId"
-          name="categoryId"
-          autoWidth
-          label="Category"
-        >
-          <MenuItem value={1}>software</MenuItem>
-          <MenuItem value={2}>homework</MenuItem>
-        </Select>
-        <InputLabel >Status</InputLabel>
-        <Select
-          id="statusId"
-          name="statusId"
-          autoWidth
-          label="Status"
-        >
-          <MenuItem value={1}>To-Do</MenuItem>
-          <MenuItem value={2} >In progress</MenuItem>
-          <MenuItem value={3}>Done</MenuItem>
-        </Select>
-        <Button fullWidth variant="contained" sx={{ marginY: 1 }} type="submit">
-          Add
-        </Button>
+      <Grid container spacing={3}>
+        <Grid item xs={3}>
+          <InputLabel>Todo</InputLabel>
+          <TextField
+            fullWidth
+            id="title"
+            label="Title"
+            name="title"
+            variant="outlined"
+            sx={{ marginY: 1 }}
+            value={title}
+            type="text"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs>
+          <InputLabel>Category</InputLabel>
+          <Select
+            id="categoryId"
+            fullWidth
+            label="Category"
+            onChange={handleChange}
+            value={selectedCategoryId}
+          >
+            {categories.map((category) => (
+              <MenuItem value={category.id}>{category.title}</MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        <Grid item xs>
+          <InputLabel>Status</InputLabel>
+
+          <Select
+            id="statusId"
+            fullWidth
+            label="Status"
+            onChange={handleStatusChange}
+            value={selectedStatusId}
+          >
+            {status.length !== 0 &&
+              status.map((item: any) => (
+                <MenuItem value={item.id}>{item.title}</MenuItem>
+              ))}
+          </Select>
+        </Grid>
+        <Grid item xs>
+          <Button variant="contained" sx={{ marginY: 4 }} type="submit" onClick={createTodo}>
+            Add
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
-  )
+  );
 }
 
 export default AddTodo;

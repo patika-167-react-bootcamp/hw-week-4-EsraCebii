@@ -8,4 +8,6 @@ export type Status = {
   }
   
   export type CreateStatusRequest = Pick<Status, "title", "color", "categoryId">
+  
+  export type UpdateStatusRequest = Pick<Status, "title", "id", "categoryId", "color">
   export type FilterStatusParams = Omit<Status, "createdAt", "updatedAt">   

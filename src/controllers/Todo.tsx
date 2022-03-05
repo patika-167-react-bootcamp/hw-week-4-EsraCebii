@@ -5,6 +5,6 @@ export const create = (payload: CreateTodoRequest ) =>
   api.post<Todo>(`todo`, payload);
 
 
-  export const list = (params: FilterTodoParams) =>
-  api.get<Todo[]>(`todo`, { params })
+  export const list = () =>
+  api.get<Todo[]>(`todo`)
   
