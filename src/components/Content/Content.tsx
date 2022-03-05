@@ -1,11 +1,12 @@
 import React from 'react'
-import TodoList from './TodoList'
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AddCategory from './AddCategory';
 import AddStatus from './AddStatus';
+import AddTodo from './AddTodo';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,7 +59,7 @@ export default function Content() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <TodoList />
+      <AddTodo />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <AddCategory setSelectedCategoryId={setSelectedCategoryId} handleTabChange={handleChange} />

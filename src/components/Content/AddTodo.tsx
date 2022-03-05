@@ -7,7 +7,7 @@ import { categoryList } from "../../controllers/Category";
 import { Category } from "../../types/categoy";
 import { statusList } from "../../controllers/Status";
 import { create } from "../../controllers/Todo";
-import { Todo } from "../../types/todo"
+import TodoList from './TodoList'
 
 
 function AddTodo() {
@@ -17,6 +17,7 @@ function AddTodo() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<any>();
   const [selectedStatusId, setSelectedStatusId] = useState<any>();
   const [todos, setTodos] = useState<any>()
+  const [outof, setOutof] = useState<boolean>(false)
 
   const fetchCategories = async () => {
     const { data } = await categoryList();
@@ -53,8 +54,8 @@ function AddTodo() {
     });
     setTodos(data);
     console.log(todos, "todos");
-    
-
+    setOutof(true)
+    setTitle("")
   };
 
   return (
@@ -110,6 +111,7 @@ function AddTodo() {
           </Button>
         </Grid>
       </Grid>
+      <TodoList categories={categories} outof={outof} />
     </Box>
   );
 }
