@@ -6,7 +6,7 @@ export const create = (payload: CreateTodoRequest) =>
 
 export const list = () => api.get<Todo[]>(`todo`);
 
-export const fliterList = (params: FilterTodoParams) =>
+export const filterList = (params: FilterTodoParams) =>
   api.get<Todo[]>(`todo`, { params });
 
 export const deleteTodo = (id: number) => api.delete(`todo/${id}`);

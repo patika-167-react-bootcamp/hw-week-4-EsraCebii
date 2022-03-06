@@ -1,12 +1,5 @@
 import { useEffect } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { list } from "../../controllers/Todo";
+import { list, filterList } from "../../controllers/Todo";
 import { FilterTodoParams } from "../../types/todo";
 import AddTodo from "./AddTodo";
 import { useState } from "react";
@@ -30,25 +23,38 @@ type Props = {
 
 export default function TodoList({ categories, outof }) {
   const [todos, setTodos] = useState<any>();
-  const [filteredTodos, setFilteredTodos] = useState<any>();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<any>();
+  // const [filteredTodos, setFilteredTodos] = useState<any>();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null);
   const [selectedStatusId, setSelectedStatusId] = useState<any>();
   const [status, setStatus] = useState<any>([]);
 
   useEffect(() => {
     fetchTodos();
   }, []);
+ 
+  useEffect(() => {
+    fetchTodos();
+  }, [outof]);
   useEffect(() => {
     fetchStatus();
   }, [selectedCategoryId]);
-  useEffect(() => {
-    fetchTodos();
-  }, [outof, todos]);
 
   const fetchTodos = async () => {
     const { data } = await list();
     setTodos(data);
+  
+   
+    
   };
+  const handleFilter = async () => {
+    if(selectedCategoryId &&  selectedStatusId) {
+    const { data } = await filterList({
+      categoryId: selectedCategoryId,
+      statusId: selectedStatusId,
+    });
+   setTodos(data)
+  }
+  }
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedCategoryId(event.target.value);
     console.log(selectedCategoryId, "selectedCategoryId");
@@ -62,6 +68,7 @@ export default function TodoList({ categories, outof }) {
   const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatusId(event.target.value);
     console.log(selectedStatusId, "selectedStatusId");
+
   };
   return (
     <Box>
@@ -96,7 +103,7 @@ export default function TodoList({ categories, outof }) {
             </Select>
           </Grid>
           <Grid item>
-            <Button variant="contained" sx={{ marginY: 4 }} type="submit">
+            <Button variant="contained" sx={{ marginY: 4 }} type="submit" onClick={handleFilter}>
               Filter
             </Button>
           </Grid>
